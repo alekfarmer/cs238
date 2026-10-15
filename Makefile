@@ -14,17 +14,19 @@ DOCKER_RUN := docker run --rm --user $$(id -u):$$(id -g) -v "$(CURDIR):/work" -w
 P1  := project1
 OUT := $(P1)/output
 
-# Search settings per dataset (see `python project1.py --help`).
-SEARCH_small  := --max-parents 4 --k2-orderings 200 --perturbations 200 --seed 0
-SEARCH_medium := --max-parents 4 --k2-orderings 100 --perturbations 100 --seed 0
-SEARCH_large  := --max-parents 4 --k2-orderings 30  --perturbations 40  --seed 0
+# Search settings per dataset (see `python project1.py --help`). Override on the
+# command line to experiment, e.g. make learn-small SEARCH_small="--max-parents 2".
+# The parent limit matters most; these values were chosen by trying 2..12.
+SEARCH_small  := --max-parents 7 --k2-orderings 200 --perturbations 200 --seed 0
+SEARCH_medium := --max-parents 12 --k2-orderings 200 --perturbations 300 --seed 0
+SEARCH_large  := --max-parents 8 --k2-orderings 100 --perturbations 1000 --perturbation-moves 6 --seed 0
 
 .PHONY: help build build-tools lint format test verify \
         learn-small learn-medium learn-large learn-all clean push pr
 
 help: ## List targets
-	@grep -E '^[a-zA-Z_%-]+:.*?## ' $(MAKEFILE_LIST) | \
-		awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_ -]+:.*?## ' $(MAKEFILE_LIST) | \
+		awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-38s\033[0m %s\n", $$1, $$2}'
 
 build: ## Build the dev image (runtime + test tools)
 	docker build -f docker/Dockerfile --target dev -t $(IMAGE):dev .
@@ -43,8 +45,7 @@ test: build ## Run the test suite
 
 verify: lint test ## The gate: lint, type check and tests must all pass
 
-learn-%: build ## Learn a structure for one dataset: learn-small | learn-medium | learn-large
-	@test -n '$(SEARCH_$*)' || { echo "unknown dataset '$*' (use small, medium or large)"; exit 2; }
+learn-small learn-medium learn-large: learn-%: build ## Learn one dataset's structure (.gph, .json, .png)
 	$(DOCKER_RUN) $(IMAGE):dev python $(P1)/project1.py \
 		$(P1)/data/$*.csv $(OUT)/$*.gph --summary $(OUT)/$*.json $(SEARCH_$*)
 	$(DOCKER_RUN) $(IMAGE):dev python $(P1)/plot_graph.py \
