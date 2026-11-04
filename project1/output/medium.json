@@ -1,0 +1,19 @@
+{
+  "dataset": "medium.csv",
+  "n_vars": 13,
+  "n_samples": 6497,
+  "n_edges": 29,
+  "score": -96285.22362037573,
+  "k2_score": -96654.92287139237,
+  "hill_climb_score": -96473.4944599932,
+  "empty_graph_score": -117668.99858664861,
+  "family_evaluations": 5117,
+  "runtime_seconds": 1.12,
+  "config": {
+    "max_parents": 12,
+    "k2_orderings": 200,
+    "perturbations": 300,
+    "perturbation_moves": 4,
+    "seed": 0
+  }
+}

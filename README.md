@@ -34,6 +34,26 @@ This repository provides starter code and data for Projects 1 and 2.
 <br>
 <sup>2</sup>https://archive.ics.uci.edu/ml/datasets/Wine+Quality
 
+### Implementation in this fork
+
+`project1/project1.py` implements the Bayesian score and a structure search
+(K2 from random orderings, then hill climbing and iterated local search).
+[`project1/HOW_IT_WORKS.md`](project1/HOW_IT_WORKS.md) explains the method
+and results. [`ARCHITECTURE.md`](ARCHITECTURE.md) describes the layout.
+
+Requirements: Docker and `make`. Nothing else is installed on the host;
+everything runs in containers.
+
+    make help          # list targets
+    make verify        # lint, strict type check, tests (the gate)
+    make learn-all     # learn all three graphs -> project1/output/{small,medium,large}.{gph,json,png}
+    make learn-large SEARCH_large="--max-parents 4 --perturbations 50"   # experiment
+
+Each `output/<name>.json` holds the final score, the score after each search
+phase, the search-only runtime and the settings used. This code is for
+understanding the project while auditing. The course requires submitted code
+to be your own.
+
 ### Notes
 - The starter code is there to help, but you're free to use any language.
 - Use `example.gph` to validate your Bayesian scoring algorithm, not your structure learning algorithm.

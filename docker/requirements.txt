@@ -1,0 +1,4 @@
+# Runtime dependencies (installed at image build time, pinned).
+numpy==2.1.3        # vectorised counting for the Bayesian score
+networkx==3.4.2     # DAG validation, graph layout for plots (used by course starter code)
+matplotlib==3.9.2   # rendering graph PNGs
