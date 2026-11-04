@@ -1,12 +1,12 @@
 [project]
-name = "cs238-project1"
-version = "0.1.0"
-description = "Bayesian network structure learning for AA228/CS238 Project 1"
+name = "cs238"
+version = "0.2.0"
+description = "AA228/CS238 projects: Bayesian structure learning (1) and offline RL (2)"
 requires-python = ">=3.12"
 
 [tool.pytest.ini_options]
-testpaths = ["project1/tests"]
-pythonpath = ["project1"]
+testpaths = ["project1/tests", "project2/tests"]
+pythonpath = ["project1", "project2"]
 
 [tool.ruff]
 line-length = 100
@@ -21,11 +21,12 @@ convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
 "project1/tests/*" = ["D"]
+"project2/tests/*" = ["D"]
 
 [tool.mypy]
 strict = true
-files = ["project1"]
-mypy_path = "project1"
+files = ["project1", "project2"]
+mypy_path = "project1:project2"
 
 [[tool.mypy.overrides]]
 module = ["networkx", "networkx.*"]
