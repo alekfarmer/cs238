@@ -4,8 +4,9 @@
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
-IMAGE  := cs238-project1
-BRANCH := project1-structure-learning
+IMAGE  := cs238
+BRANCH := project2-rl
+PR_TITLE := Project 2: offline reinforcement learning
 REPO   := alekfarmer/cs238
 
 # Run as the host user so files written to the mounted repo are owned by you.
@@ -21,8 +22,18 @@ SEARCH_small  := --max-parents 7 --k2-orderings 200 --perturbations 200 --seed 0
 SEARCH_medium := --max-parents 12 --k2-orderings 200 --perturbations 300 --seed 0
 SEARCH_large  := --max-parents 8 --k2-orderings 100 --perturbations 1000 --perturbation-moves 6 --seed 0
 
+P2     := project2
+P2_OUT := $(P2)/output
+
+# Planning settings per dataset (see `python project2.py --help`). medium is
+# undiscounted, so value iteration converges slowly; it gets a larger cap.
+SOLVE_small  := --tol 1e-8 --values $(P2_OUT)/small.values
+SOLVE_medium := --tol 1e-6 --max-iter 20000
+SOLVE_large  := --tol 1e-8
+
 .PHONY: help build build-tools lint format test verify \
-        learn-small learn-medium learn-large learn-all clean push pr
+        learn-small learn-medium learn-large learn-all \
+        policy-small policy-medium policy-large policy-all plot-small plot-medium clean push pr
 
 help: ## List targets
 	@grep -E '^[a-zA-Z_ -]+:.*?## ' $(MAKEFILE_LIST) | \
@@ -53,8 +64,23 @@ learn-small learn-medium learn-large: learn-%: build ## Learn one dataset's stru
 
 learn-all: learn-small learn-medium learn-large ## Learn all three structures
 
+policy-small policy-medium policy-large: policy-%: build ## Learn one dataset's policy (.policy, .json)
+	$(DOCKER_RUN) $(IMAGE):dev python $(P2)/project2.py $* \
+		$(P2)/data/$*.csv $(P2_OUT)/$*.policy --summary $(P2_OUT)/$*.json \
+		$(SOLVE_$*)
+
+plot-small: policy-small ## Heatmap of small's values with policy arrows
+	$(DOCKER_RUN) $(IMAGE):dev python $(P2)/plot_policy.py small \
+		$(P2_OUT)/small.policy $(P2_OUT)/small.png --values $(P2_OUT)/small.values
+
+plot-medium: policy-medium ## Map of medium's chosen action over (position, velocity)
+	$(DOCKER_RUN) $(IMAGE):dev python $(P2)/plot_policy.py medium \
+		$(P2_OUT)/medium.policy $(P2_OUT)/medium.png
+
+policy-all: plot-small plot-medium policy-large ## Learn all three policies and draw the grid ones
+
 clean: ## Remove caches (keeps learned outputs)
-	rm -rf .pytest_cache .mypy_cache .ruff_cache $(P1)/__pycache__ $(P1)/tests/__pycache__
+	rm -rf .pytest_cache .mypy_cache .ruff_cache $(P1)/__pycache__ $(P1)/tests/__pycache__ $(P2)/__pycache__ $(P2)/tests/__pycache__
 
 push: ## Push the feature branch to your fork (origin)
 	git push -u origin $(BRANCH)
@@ -64,4 +90,4 @@ pr: build-tools ## Open a PR from the feature branch into main of your fork (nee
 	@test -f .pr-body.md || { echo ".pr-body.md missing"; exit 2; }
 	docker run --rm --env-file .env -v "$(CURDIR):/work" -w /work $(IMAGE):tools \
 		gh pr create --repo $(REPO) --base main --head $(BRANCH) \
-		--title "Project 1: Bayesian network structure learning" --body-file .pr-body.md
+		--title "$(PR_TITLE)" --body-file .pr-body.md

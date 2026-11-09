@@ -1,0 +1,36 @@
+{
+  "problem": {
+    "name": "large",
+    "n_states": 302020,
+    "n_actions": 9,
+    "gamma": 0.95,
+    "grid": null,
+    "goal_reward": null
+  },
+  "settings": {
+    "gamma": 0.95,
+    "tol": 1e-08,
+    "max_iter": 10000
+  },
+  "samples": 100000,
+  "observed_states": 500,
+  "filled_states": 301520,
+  "fill_rule": "most common learned action (4)",
+  "iterations": 448,
+  "final_residual": 9.667928679846227e-09,
+  "converged": true,
+  "runtime_seconds": 3.709,
+  "model_mean_value_learned": 583.46411926615,
+  "model_mean_value_random": 5.1179200741578095,
+  "action_counts": [
+    141,
+    90,
+    90,
+    301683,
+    2,
+    0,
+    0,
+    0,
+    14
+  ]
+}

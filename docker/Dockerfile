@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-# Images for AA228/CS238 Project 1. Everything is installed at build time.
+# Images for the AA228/CS238 projects. Everything is installed at build time.
 
 # --- runtime: Python plus the libraries the pipeline needs ---------------------
 FROM python:3.12.7-slim-bookworm AS runtime

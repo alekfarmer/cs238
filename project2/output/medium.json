@@ -1,0 +1,37 @@
+{
+  "problem": {
+    "name": "medium",
+    "n_states": 50000,
+    "n_actions": 7,
+    "gamma": 1.0,
+    "grid": [
+      500,
+      100
+    ],
+    "goal_reward": 50000.0
+  },
+  "settings": {
+    "gamma": 1.0,
+    "tol": 1e-06,
+    "max_iter": 20000
+  },
+  "samples": 100000,
+  "observed_states": 22530,
+  "filled_states": 27470,
+  "fill_rule": "action of nearest observed state on the grid",
+  "iterations": 1735,
+  "final_residual": 9.90883563645184e-07,
+  "converged": true,
+  "runtime_seconds": 10.577,
+  "model_mean_value_learned": 97928.87829881597,
+  "model_mean_value_random": 87744.34900763976,
+  "action_counts": [
+    3721,
+    3012,
+    10202,
+    10369,
+    13396,
+    2047,
+    7253
+  ]
+}

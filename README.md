@@ -47,6 +47,7 @@ everything runs in containers.
     make help          # list targets
     make verify        # lint, strict type check, tests (the gate)
     make learn-all     # learn all three graphs -> project1/output/{small,medium,large}.{gph,json,png}
+    make policy-all    # learn all three policies -> project2/output/ (see Project 2 below)
     make learn-large SEARCH_large="--max-parents 4 --perturbations 50"   # experiment
 
 Each `output/<name>.json` holds the final score, the score after each search
@@ -133,6 +134,23 @@ savefig(p, "wheel_graphrecipes.pdf")
         └── large.csv                 # Secret RL problem
 
 *Note: no starter code provided for Project 2.*
+
+### Implementation in this fork
+
+`project2/project2.py` estimates a maximum-likelihood MDP from the logged
+transitions, solves it with value iteration, and fills states that never appear
+in the data. [`project2/HOW_IT_WORKS.md`](project2/HOW_IT_WORKS.md) explains the
+method, what each dataset turned out to contain, and the results.
+
+    make policy-all       # -> project2/output/{small,medium,large}.{policy,json}, small.png, medium.png
+    make plot-small       # just small: policy, summary, value heatmap with arrows
+    make policy-medium SOLVE_medium="--gamma 0.999"   # experiment
+
+Each `output/<name>.json` holds the iteration count, convergence, runtime, and
+the learned policy's value under the estimated model compared with a random
+policy. The real score is available only from Gradescope. This code is for
+understanding the project while auditing. The course requires submitted code
+to be your own.
 
 ## Contact
 Please post on [Ed](https://edstem.org/) with any questions regarding this code, the data, and the projects in general. We'd be happy to help!
